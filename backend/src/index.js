@@ -6,6 +6,10 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
+const dotenv = require('dotenv');
+
+// load env variables
+dotenv.config();
 
 // define the Express app
 const app = express();
@@ -49,12 +53,12 @@ const checkJwt = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://bk-tmp.auth0.com/.well-known/jwks.json`
+    jwksUri: process.env.JWKS_URI
   }),
 
   // Validate the audience and the issuer.
-  audience: 'PVafIu9Q5QN65DiPByAFvCCJryY7n432',
-  issuer: `https://bk-tmp.auth0.com/`,
+  audience: process.env.AUDIENCE,
+  issuer: process.env.ISSUER,
   algorithms: ['RS256']
 });
 
