@@ -1,3 +1,77 @@
+# Castle Integration with Auth0 [React App example]
+
+This repository includes slight changes to the [Auth0 Blog React Tutorial](https://github.com/auth0-blog/react-tutorial).
+
+The Auth0 configuration parameters are expected to be defined in two `.env` files, specified as:
+
+```
+// in backend/.env
+
+ISSUER=https://{Your Auth0 Domain}
+AUDIENCE={Your Auth0 App ID}
+JWKS_URI=https://{Your Auth0 base URL}.well-known/jwks.json
+
+// in frontend/.env
+
+REACT_APP_AUTH0_DOMAIN={Your Auth0 Domain}
+REACT_APP_AUTH0_CLIENT_ID={Your Auth0 app Client ID}
+```
+
+At a minimum, the following configurations need to be updated in your Auth0 app settings:
+
+1. Register the localhost callback url: `http://localhost:3000/callback`
+2. Register the allowed logout url: `http://localhost:3000`
+3. Create a Rule to add Castle to the authentication process (see section below)
+
+## The Castle Auth0 Rule
+Auth0 allows [Rules](https://auth0.com/docs/rules) that can be executed when a user authenticates to your application. We will create and use such a rule to integrate Castle with Auth0 for your application. This rule will run a JavaScript function which digests the user information and the context of the authentication, calls the `/authenticate` endpoint at Castle.io, and proceeds with authentication based on the Castle verdict. 
+
+Documentation about Castle's `/authenticate` endpoint [can be found here](https://castle.io/docs/api_reference).
+
+```
+function (user, context, callback) {
+  // Get this from your Castle Dashboard, on the Settings page
+  var apiSecret = configuration.CASTLE_API_SECRET;
+
+  var options = {
+    method: 'POST',
+    auth: {
+      'user': '',
+      'pass': apiSecret
+    },
+    uri: 'https://api.castle.io/v1/authenticate',
+    json: true,
+    body: {
+      event: '$login.succeeded',
+      user_id: user.user_id,
+      user_traits: {
+        email: user.email,
+        registered_at: user.created_at
+      },
+      context: {
+        client_id: false,
+        ip: context.request.ip,
+        headers: {
+          'User-Agent': context.request.userAgent
+        }
+      }
+    }
+  };
+
+  request.post(options, function (err, httpResponse, body) {
+    if (err) {
+      console.error('Error in Castle Rule request', err);
+      callback(new UnauthorizedError('Request library error, Castle was not called'));
+    } else {
+      console.log('response: ' + JSON.stringify(httpResponse));
+      callback(null, user, context);
+    }
+  });
+}
+```
+
+---
+
 # React Tutorial: Building and Securing Your First App
 
 Application repo accompanying this Auth0 article. In this article, you will learn how to build modern applications with React and Node.js.
@@ -25,35 +99,4 @@ npm i
 
 # run the frontend app
 npm start
-```
-
-### Running on Minikube
-
-References:
-
-- https://medium.com/@awkwardferny/getting-started-with-kubernetes-ingress-nginx-on-minikube-d75e58f52b6c
-- https://medium.freecodecamp.org/learn-kubernetes-in-under-3-hours-a-detailed-guide-to-orchestrating-containers-114ff420e882
-
-Create all the resources (deployment, services, and ingress):
-
-```bash
-kubectl apply -f resources-manifests/deployment.yaml
-kubectl apply -f resources-manifests/backend-service.yaml
-kubectl apply -f resources-manifests/frontend-service.yaml
-kubectl apply -f resources-manifests/ingress.yaml
-```
-
-Then, find out the IP address of the Minikube cluster:
-
-```bash
-minikube ip
-```
-
-Finally, head to a web browser and hit the IP address returned by the command above. Also, if needed you can use the following commands to shutdown everything: 
-
-```bash
-kubectl delete -f resources-manifests/deployment.yaml
-kubectl delete -f resources-manifests/backend-service.yaml
-kubectl delete -f resources-manifests/frontend-service.yaml
-kubectl delete -f resources-manifests/ingress.yaml
 ```
