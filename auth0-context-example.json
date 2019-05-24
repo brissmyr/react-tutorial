@@ -1,0 +1,64 @@
+{
+  "tenant": "dev-i854k4jo",
+  "clientID": "EQgwazThPVZsu5MLoEFiZWTRmwOdLQTR",
+  "clientName": "React-Castle",
+  "clientMetadata": {},
+  "connection": "Username-Password-Authentication",
+  "connectionStrategy": "auth0",
+  "connectionID": "con_LJVDn6YU6V8E1hIg",
+  "connectionOptions": {},
+  "connectionMetadata": {},
+  "samlConfiguration": {},
+  "jwtConfiguration": {},
+  "protocol": "oidc-implicit-profile",
+  "stats": {
+    "loginsCount": 8
+  },
+  "sso": {
+    "with_auth0": false,
+    "with_dbconn": false,
+    "current_clients": [
+      "EQgwazThPVZsu5MLoEFiZWTRmwOdLQTR",
+      "fab_Bdv_0toTMhKUd2YyOyh9qEOnJcaW"
+    ]
+  },
+  "accessToken": {},
+  "idToken": {},
+  "authentication": {
+    "methods": [
+      {
+        "name": "pwd",
+        "timestamp": 1558738690771
+      }
+    ]
+  },
+  "sessionID": "ZtuZzSnDdm5nnoxYjIca7aIi8kDhC-l-",
+  "request": {
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+    "ip": "52.119.124.166",
+    "hostname": "dev-i854k4jo.auth0.com",
+    "query": {
+      "client_id": "EQgwazThPVZsu5MLoEFiZWTRmwOdLQTR",
+      "response_type": "id_token",
+      "redirect_uri": "http://localhost:3000/callback",
+      "scope": "openid profile",
+      "state": "d6e688eb-6a8b-4b5e-a2d9-1123c875b4a5-35fa78a451de78a475fa78a4",
+      "nonce": "Hoxkj5GT.BL5I10tUciEuJX1ZkSYac9m",
+      "auth0Client": "eyJuYW1lIjoiYXV0aDAuanMiLCJ2ZXJzaW9uIjoiOS44LjEifQ=="
+    },
+    "body": {},
+    "geoip": {
+      "country_code": "US",
+      "country_code3": "USA",
+      "country_name": "United States",
+      "city_name": "San Francisco",
+      "latitude": 37.8231,
+      "longitude": -122.3693,
+      "time_zone": "America/Los_Angeles",
+      "continent_code": "NA"
+    }
+  },
+  "authorization": {
+    "roles": []
+  }
+}

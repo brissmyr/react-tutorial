@@ -9,7 +9,8 @@ class Auth {
       clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
       redirectUri: 'http://localhost:3000/callback',
       responseType: 'id_token',
-      scope: 'openid profile'
+      scope: 'openid profile',
+      state: window._castle('getClientId')
     });
 
     this.getProfile = this.getProfile.bind(this);
@@ -51,11 +52,15 @@ class Auth {
   setSession(authResult) {
     this.idToken = authResult.idToken;
     this.profile = authResult.idTokenPayload;
+    console.log('calling _castle("identify") with user: ' + this.profile.sub)
+    window._castle('identify', this.profile.sub);
+    window._castle('trackPageview');
     // set the time that the id token will expire at
     this.expiresAt = authResult.idTokenPayload.exp * 1000;
   }
 
   signOut() {
+    window._castle('reset')
     this.auth0.logout({
       returnTo: 'http://localhost:3000',
       clientID: process.env.REACT_APP_AUTH0_CLIENT_ID

@@ -1,0 +1,23 @@
+{
+  "_id": "7af25583b0f6e673723d4cd7e3c3d63b",
+  "email_verified": true,
+  "email": "chris.concannon@castle.io",
+  "clientID": "fab_Bdv_0toTMhKUd2YyOyh9qEOnJcaW",
+  "updated_at": "2019-05-24T22:58:10.766Z",
+  "user_id": "auth0|5ce6ef7c6202f3110407efe1",
+  "name": "chris.concannon@castle.io",
+  "picture": "https://s.gravatar.com/avatar/9f9f4025890f11026565988683a69c1f?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fch.png",
+  "nickname": "chris.concannon",
+  "identities": [
+    {
+      "user_id": "5ce6ef7c6202f3110407efe1",
+      "provider": "auth0",
+      "connection": "Username-Password-Authentication",
+      "isSocial": false
+    }
+  ],
+  "created_at": "2019-05-23T19:07:40.216Z",
+  "last_password_reset": "2019-05-24T22:57:17.259Z",
+  "global_client_id": "fab_Bdv_0toTMhKUd2YyOyh9qEOnJcaW",
+  "persistent": {}
+}
