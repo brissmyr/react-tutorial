@@ -1,6 +1,19 @@
 # Castle Integration with Auth0 [React App example]
 
-This repository includes slight changes to the [Auth0 Blog React Tutorial](https://github.com/auth0-blog/react-tutorial).
+## About Castle
+[Castle](https://castle.io/) offers a suite of security tools that serve to protect your users. Castle is used to detect automated credential stuffing attacks and human-powered account takover. After detecting such attacks and mitigating the damage as much as possible in real time, Castle offers API-based solutions to automate the account recovery process. Castle aims to reduce user friction while providing enhanced account security.
+
+Some features of Castle include:
+- User-trained AI
+- Account Recovery Automation
+- Device-level User Analytics
+- Account Security API
+
+## Setup
+
+This repository includes slight changes to the [Auth0 Blog React Tutorial](https://github.com/auth0-blog/react-tutorial). Some changes abstract configuration details to `.env` files. The other changes serve to integrate Castle according to the [Castle Baseline Integration](https://castle.io/docs/baseline#adaptive-authentication) recommendations.
+
+### Code Configuration
 
 The Auth0 configuration parameters are expected to be defined in two `.env` files, specified as:
 
@@ -17,6 +30,11 @@ REACT_APP_AUTH0_DOMAIN={Your Auth0 Domain}
 REACT_APP_AUTH0_CLIENT_ID={Your Auth0 app Client ID}
 ```
 
+Additionally, the `<script>` tag in line 25 of `index.html` should be updated with your Castle App ID, for example:
+`https://d2t77mnxyo7adj.cloudfront.net/v1/c.js?{YOUR_APP_ID_HERE}`
+
+### Auth0 Settings
+
 At a minimum, the following configurations need to be updated in your Auth0 app settings:
 
 1. Register the localhost callback url: `http://localhost:3000/callback`
@@ -25,7 +43,7 @@ At a minimum, the following configurations need to be updated in your Auth0 app 
 
 ## The Castle `/authenticate` Integration with Auth0
 
-Auth0 allows [Rules](https://auth0.com/docs/rules) that can be executed when a user authenticates to your application. We will create and use such a rule to integrate Castle with Auth0 for your application. This rule will run a JavaScript function which digests the user information and the context of the authentication, calls the `/authenticate` endpoint at Castle.io, and proceeds with authentication based on the Castle verdict. 
+Auth0 allows [Rules](https://auth0.com/docs/rules) that can be executed after a user authenticates successfully with Auth0. We will create and use such a rule to integrate Castle with Auth0 for your application. This rule will run a JavaScript function which digests the user and context, calls the `/authenticate` endpoint at Castle, and proceeds with authentication based on the Castle verdict. 
 
 Documentation about Castle's `/authenticate` endpoint [can be found here](https://castle.io/docs/api_reference).
 
@@ -87,7 +105,7 @@ function (user, context, callback) {
 }
 ```
 
-The response body from the Castle `/authenticate` endpoint will contain a recommended `action` of `allow`, `challenge`, or `deny`. The payload looks like this:
+The response body from the Castle `/authenticate` endpoint will contain a recommended `action` of `'allow'`, `'challenge'`, or `'deny'`. The payload looks like this:
 
 ```
 { 
@@ -97,17 +115,25 @@ The response body from the Castle `/authenticate` endpoint will contain a recomm
 }
 ```
 
+As the code is written above, Auth0 will throw an `UnauthorizedError` for all cases except for an explicit `action: 'allow'` verdict from Castle. The Auth0 Rules debugger can be used to troubleshoot the UnauthorizedError, user, and context.
+
 ## Castle Webhooks Integration with Auth0
 
 ### Tracking `challenge` Recommendations with Castle
 
-Several other integrations with Castle's product offerings are possible with Auth0 Rules. One such integration is possible as a logical next step to handle the Castle `challenge` verdict after the Castle `/authenticate` endpoint has been integrated. If the context for a user login results in a risk score above the tolerable risk threshold, Castle will return a `challenge` recommendation. The method of challenging the user, whether using SMS, a questionnaire, email, a hardware token, etc. is left to you.
+Several other integrations with Castle's product offerings are possible with Auth0 Rules. One such integration is possible as a logical next step to handle the Castle `action: 'challenge'` verdict after the Castle `/authenticate` endpoint has been integrated. If the context for a user login results in a risk score above the tolerable risk threshold, Castle will return a `challenge` recommendation. The method of challenging the user, whether using SMS, a questionnaire, email, a hardware token, etc. is left to you.
 
 Castle provides webhooks to assist in account management for various scenarios of success or failure by the end user in a `challenge` scenario. An example scenario starts with Castle returning a `challenge` verdict requested. You would send the event `$challenge.requested` to the Castle `/track` endpoint. When a user completes the challenge successfully, a `$challenge.succeeded` event would be tracked. Alternatively, a `$challenge.failed` could be used to initiate a `$review.opened` event. These track events to Castle will move the risk score for that particular user and context, which will help to secure the user's account as well as reduce future friction for authenticating that user.
 
 ### Device Reporting and Account Recovery with Castle
 
 Castle offers many other webhooks that help to automate the account recovery process. The webhooks are designed with user flows in mind that allow users to perform much of the work associated with account recovery. Examples of these webhooks include the `$review.escalated` and `$incident.confirmed` event types, managing password resets with `$password_reset.succeeded`, and more.
+
+---
+
+*Everything below this line is copied from the [Auth0 React Tutorial](https://github.com/auth0-blog/react-tutorial)*
+
+---
 
 ---
 
