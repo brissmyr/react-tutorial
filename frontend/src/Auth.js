@@ -9,8 +9,7 @@ class Auth {
       clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
       redirectUri: 'http://localhost:3000/callback',
       responseType: 'id_token',
-      scope: 'openid profile',
-      state: window._castle('getClientId')
+      scope: 'openid profile'
     });
 
     this.getProfile = this.getProfile.bind(this);
@@ -33,7 +32,10 @@ class Auth {
   }
 
   signIn() {
-    this.auth0.authorize();
+    const castleClientId = window._castle('getClientId');
+    this.auth0.authorize({
+      state: castleClientId
+    });
   }
 
   handleAuthentication() {
