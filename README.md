@@ -17,14 +17,14 @@ This repository includes slight changes to the [Auth0 Blog React Tutorial](https
 
 The Auth0 configuration parameters are expected to be defined in two `.env` files, specified as:
 
-```
-// in backend/.env
+```bash
+# in backend/.env
 
 ISSUER=https://{Your Auth0 Domain}
 AUDIENCE={Your Auth0 App ID}
 JWKS_URI=https://{Your Auth0 base URL}.well-known/jwks.json
 
-// in frontend/.env
+# in frontend/.env
 
 REACT_APP_AUTH0_DOMAIN={Your Auth0 Domain}
 REACT_APP_AUTH0_CLIENT_ID={Your Auth0 app Client ID}
@@ -49,7 +49,7 @@ Documentation about Castle's `/authenticate` endpoint [can be found here](https:
 
 The code for the rule is below:
 
-```
+```javascript
 function (user, context, callback) {
   // Get this from your Castle Dashboard, on the Settings page
   var apiSecret = configuration.CASTLE_API_SECRET;
@@ -107,7 +107,7 @@ function (user, context, callback) {
 
 The response body from the Castle `/authenticate` endpoint will contain a recommended `action` of `'allow'`, `'challenge'`, or `'deny'`. The payload looks like this:
 
-```
+```javascript
 { 
   action: 'allow',
   user_id: 'auth0|5ce6ef7c6202f3110407efe1',
